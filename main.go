@@ -2,20 +2,21 @@ package main
 
 import (
 	"crypto/ed25519"
-	"crypto/rand"
 	"fmt"
 	egoenclave "github.com/edgelesssys/ego/enclave"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/hanslee/go-sgx-dcap-poc/enclave"
 	"github.com/hanslee/go-sgx-dcap-poc/eth"
 	"log"
 )
 
 func main() {
-	// 1. Generate QE key pair
-	pub, priv, err := ed25519.GenerateKey(rand.Reader)
+	// 1. Load or generate QE key pair
+	pub, priv, err := enclave.LoadOrCreateSealedQEKey()
 	if err != nil {
 		log.Fatalf("failed to generate keypair: %v", err)
 	}
+	fmt.Println("Public key: ", hexutil.Encode(pub))
 
 	// 2. Create a new Eth Client
 	ethClient, err := eth.NewEthClient()
