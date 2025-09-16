@@ -119,5 +119,7 @@ func (ec *EthClient) SubmitFmspcTcb(tcbInfoStr string, signature []byte) (*types
 }
 
 func (ec *EthClient) VerifyAndAttestOnChain(rawQuote []byte) (*types.Transaction, error) {
+	ec.Auth.Value = new(big.Int).SetUint64(10000000000000000)
+
 	return ec.AttestationContract.Transact(ec.Auth, "verifyAndAttestOnChain", rawQuote)
 }
