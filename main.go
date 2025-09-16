@@ -1,7 +1,6 @@
 package main
 
 import (
-	"crypto/ed25519"
 	"fmt"
 	egoenclave "github.com/edgelesssys/ego/enclave"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -12,7 +11,7 @@ import (
 
 func main() {
 	// 1. Load or generate QE key pair
-	pub, priv, err := enclave.LoadOrCreateSealedQEKey()
+	pub, _, err := enclave.LoadOrCreateSealedQEKey()
 	if err != nil {
 		log.Fatalf("failed to generate keypair: %v", err)
 	}
@@ -31,40 +30,40 @@ func main() {
 	}
 
 	// 4. Extract FMSPC from quote
-	fmspc := enclave.ExtractFmspc(report)
-	if fmspc == "" {
-		log.Fatal("failed to extract fmspc from quote")
-	}
-	fmt.Println("Extracted fmspc:", fmspc)
+	//fmspc := enclave.ExtractFmspc(report)
+	//if fmspc == "" {
+	//	log.Fatal("failed to extract fmspc from quote")
+	//}
+	//fmt.Println("Extracted fmspc:", fmspc)
 
 	// 5. Fetch TCB info from Intel
-	tcbInfoStr, sigBytes, err := enclave.FetchTcbInfo(fmspc)
-	if err != nil {
-		log.Fatal("failed to fetch TCBInfo:", err)
-	}
+	//tcbInfoStr, sigBytes, err := enclave.FetchTcbInfo(fmspc)
+	//if err != nil {
+	//	log.Fatal("failed to fetch TCBInfo:", err)
+	//}
 
 	// 6. Upsert the TCBInfo.json on-chain
-	txFmspcTcb, err := ethClient.SubmitFmspcTcb(tcbInfoStr, sigBytes)
-	if err != nil {
-		log.Fatal("failed to submit FMSPC TCBInfo:", err)
-	}
-	fmt.Println("upsert FMSPC TCB tx submitted:", txFmspcTcb.Hash().Hex())
+	//txFmspcTcb, err := ethClient.SubmitFmspcTcb(tcbInfoStr, sigBytes)
+	//if err != nil {
+	//	log.Fatal("failed to submit FMSPC TCBInfo:", err)
+	//}
+	//fmt.Println("upsert FMSPC TCB tx submitted:", txFmspcTcb.Hash().Hex())
 
 	// 7. Generate QEIdentity
-	identityStr, _, err := enclave.GenerateQEIdentity(pub, report)
-	if err != nil {
-		log.Fatalf("failed to generate QE identity: %v", err)
-	}
+	//identityStr, _, err := enclave.GenerateQEIdentity(pub, report)
+	//if err != nil {
+	//	log.Fatalf("failed to generate QE identity: %v", err)
+	//}
 
 	// 8. Sign the JSON
-	signature := ed25519.Sign(priv, []byte(identityStr))
+	//signature := ed25519.Sign(priv, []byte(identityStr))
 
 	// 9. Submit a transaction for registration of QE identity
-	tx, err := ethClient.SubmitQEIdentity(identityStr, signature)
-	if err != nil {
-		log.Fatalf("contract call failed: %v", err)
-	}
-	fmt.Println("upsert QE identity tx submitted:", tx.Hash().Hex())
+	//tx, err := ethClient.SubmitQEIdentity(identityStr, signature)
+	//if err != nil {
+	//	log.Fatalf("contract call failed: %v", err)
+	//}
+	//fmt.Println("upsert QE identity tx submitted:", tx.Hash().Hex())
 
 	// 10. Submit Quote for On-Chain Remote Attestation
 	txQuote, err := ethClient.VerifyAndAttestOnChain(report)
