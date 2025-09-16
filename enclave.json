@@ -22,6 +22,10 @@
     {
       "name": "HOME",
       "value": "/home_mnt"
+    },
+    {
+      "name": "PRIVATE_KEY",
+      "fromHost": true
     }
   ],
   "files": null

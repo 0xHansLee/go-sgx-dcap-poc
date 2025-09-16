@@ -41,7 +41,7 @@ func NewEthClient() (*EthClient, error) {
 		return nil, err
 	}
 
-	privateKeyHex := os.Getenv("EDG_PRIVATE_KEY")
+	privateKeyHex := os.Getenv("PRIVATE_KEY")
 	if privateKeyHex == "" {
 		return nil, fmt.Errorf("PRIVATE_KEY environment variable not set")
 	}
