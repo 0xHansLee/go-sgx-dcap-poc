@@ -10,7 +10,7 @@ import (
 	"github.com/edgelesssys/ego/ecrypto"
 )
 
-const keyFile = "priv_key.sealed"
+const keyFile = "/home_mnt/priv_key.sealed"
 
 type QEKey struct {
 	Private ed25519.PrivateKey
