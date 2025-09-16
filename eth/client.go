@@ -16,7 +16,7 @@ import (
 const (
 	pccsAbiPath                = "/home_mnt/abi/automata_pccs.abi.json"
 	fmspcAbiPath               = "/home_mnt/abi/automata_fmspc.abi.json"
-	attestationAbiPath         = "/home_mnt/abi/automata_attestaion.abi.json"
+	attestationAbiPath         = "/home_mnt/abi/automata_attestation.abi.json"
 	pccsContractAddress        = "0xe20C4d54afBbea5123728d5b7dAcD9CB3c65C39a"
 	fmspcContractAddress       = "0x63eF330eAaadA189861144FCbc9176dae41A5BAf"
 	attestationContractAddress = "0x95175096a9B74165BE0ac84260cc14Fc1c0EF5FF"
