@@ -1,6 +1,8 @@
 package eth
 
 import (
+	"context"
+	"crypto/tls"
 	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -8,7 +10,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/rpc"
 	"math/big"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -36,10 +40,18 @@ type EthClient struct {
 }
 
 func NewEthClient() (*EthClient, error) {
-	client, err := ethclient.Dial(rpcURL)
+	httpClient := &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		},
+	}
+
+	rpcClient, err := rpc.DialOptions(context.Background(), rpcURL, rpc.WithHTTPClient(httpClient))
 	if err != nil {
 		return nil, err
 	}
+
+	client := ethclient.NewClient(rpcClient)
 
 	privateKeyHex := os.Getenv("PRIVATE_KEY")
 	if privateKeyHex == "" {

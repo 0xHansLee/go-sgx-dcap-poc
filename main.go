@@ -66,6 +66,9 @@ func main() {
 	//fmt.Println("upsert QE identity tx submitted:", tx.Hash().Hex())
 
 	// 10. Submit Quote for On-Chain Remote Attestation
+	parsedReport, _ := egoenclave.VerifyRemoteReport(report)
+	fmt.Println("report: ", parsedReport)
+
 	txQuote, err := ethClient.VerifyAndAttestOnChain(report)
 	if err != nil {
 		log.Fatalf("failed to submit quote: %v", err)
