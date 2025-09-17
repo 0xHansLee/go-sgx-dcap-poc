@@ -5,7 +5,6 @@ import (
 	egoenclave "github.com/edgelesssys/ego/enclave"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/hanslee/go-sgx-dcap-poc/enclave"
-	"github.com/hanslee/go-sgx-dcap-poc/eth"
 	"log"
 )
 
@@ -18,10 +17,10 @@ func main() {
 	fmt.Println("Public key: ", hexutil.Encode(pub))
 
 	// 2. Create a new Eth Client
-	ethClient, err := eth.NewEthClient()
-	if err != nil {
-		log.Fatalf("failed to create eth client: %v", err)
-	}
+	//ethClient, err := eth.NewEthClient()
+	//if err != nil {
+	//	log.Fatalf("failed to create eth client: %v", err)
+	//}
 
 	// 3. Get real quote from enclave
 	report, err := egoenclave.GetRemoteReport(pub)
@@ -66,12 +65,16 @@ func main() {
 	//fmt.Println("upsert QE identity tx submitted:", tx.Hash().Hex())
 
 	// 10. Submit Quote for On-Chain Remote Attestation
-	parsedReport, _ := egoenclave.VerifyRemoteReport(report)
-	fmt.Println("report: ", parsedReport)
-
-	txQuote, err := ethClient.VerifyAndAttestOnChain(report)
+	parsedReport, err := egoenclave.VerifyRemoteReport(report)
 	if err != nil {
-		log.Fatalf("failed to submit quote: %v", err)
+		fmt.Println("error: ", err)
+	} else {
+		fmt.Println("report: ", parsedReport)
 	}
-	fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
+
+	//txQuote, err := ethClient.VerifyAndAttestOnChain(report)
+	//if err != nil {
+	//	log.Fatalf("failed to submit quote: %v", err)
+	//}
+	//fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
 }
