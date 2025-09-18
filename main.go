@@ -6,7 +6,6 @@ import (
 	egoenclave "github.com/edgelesssys/ego/enclave"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/hanslee/go-sgx-dcap-poc/enclave"
-	"github.com/hanslee/go-sgx-dcap-poc/eth"
 	"log"
 )
 
@@ -19,10 +18,10 @@ func main() {
 	fmt.Println("Public key: ", hexutil.Encode(pub))
 
 	// 2. Create a new Eth Client
-	ethClient, err := eth.NewEthClient()
-	if err != nil {
-		log.Fatalf("failed to create eth client: %v", err)
-	}
+	//ethClient, err := eth.NewEthClient()
+	//if err != nil {
+	//	log.Fatalf("failed to create eth client: %v", err)
+	//}
 
 	// 3. Get real quote from enclave
 	fmt.Println("pub key as a report data", hexutil.Encode(pub))
@@ -90,21 +89,24 @@ func main() {
 		fmt.Println("tcb advisories err: ", parsedReport.TCBAdvisoriesErr)
 	}
 
-	txQuote, err := ethClient.VerifyAndAttestOnChain(report)
-	if err != nil {
-		log.Fatalf("failed to submit quote: %v", err)
-	}
-	fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
+	//txQuote, err := ethClient.VerifyAndAttestOnChain(report)
+	//if err != nil {
+	//	log.Fatalf("failed to submit quote: %v", err)
+	//}
+	//fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
 }
 
 func extractFMSPC(quote []byte) (string, error) {
-	const fmspcOffset = 464
-	const fmspcLength = 6
+	const offset = 464
+	if len(quote) < offset+6 {
+		return "", fmt.Errorf("quote too short")
+	}
+	fmspc := quote[offset : offset+6]
 
-	if len(quote) < fmspcOffset+fmspcLength {
-		return "", fmt.Errorf("quote too short for FMSPC extraction")
+	// reverse to big endian
+	for i, j := 0, len(fmspc)-1; i < j; i, j = i+1, j-1 {
+		fmspc[i], fmspc[j] = fmspc[j], fmspc[i]
 	}
 
-	fmspc := quote[fmspcOffset : fmspcOffset+fmspcLength]
 	return hex.EncodeToString(fmspc), nil
 }
