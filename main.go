@@ -5,6 +5,7 @@ import (
 	egoenclave "github.com/edgelesssys/ego/enclave"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/hanslee/go-sgx-dcap-poc/enclave"
+	"github.com/hanslee/go-sgx-dcap-poc/eth"
 	"log"
 )
 
@@ -17,12 +18,13 @@ func main() {
 	fmt.Println("Public key: ", hexutil.Encode(pub))
 
 	// 2. Create a new Eth Client
-	//ethClient, err := eth.NewEthClient()
-	//if err != nil {
-	//	log.Fatalf("failed to create eth client: %v", err)
-	//}
+	ethClient, err := eth.NewEthClient()
+	if err != nil {
+		log.Fatalf("failed to create eth client: %v", err)
+	}
 
 	// 3. Get real quote from enclave
+	fmt.Println("pub key as a report data", hexutil.Encode(pub))
 	report, err := egoenclave.GetRemoteReport(pub)
 	if err != nil {
 		log.Fatalf("failed to get quote: %v", err)
@@ -69,12 +71,20 @@ func main() {
 	if err != nil {
 		fmt.Println("error: ", err)
 	} else {
-		fmt.Println("report: ", parsedReport)
+		fmt.Println("generated report")
+		fmt.Println("data (pub key): ", hexutil.Encode(parsedReport.Data))
+		fmt.Println("security version: ", parsedReport.SecurityVersion)
+		fmt.Println("unique id: ", hexutil.Encode(parsedReport.UniqueID))
+		fmt.Println("signer id: ", hexutil.Encode(parsedReport.SignerID))
+		fmt.Println("product id: ", hexutil.Encode(parsedReport.ProductID))
+		fmt.Println("tcb status: ", parsedReport.TCBStatus)
+		fmt.Println("tcb advisories: ", parsedReport.TCBAdvisories)
+		fmt.Println("tcb advisories err: ", parsedReport.TCBAdvisoriesErr)
 	}
 
-	//txQuote, err := ethClient.VerifyAndAttestOnChain(report)
-	//if err != nil {
-	//	log.Fatalf("failed to submit quote: %v", err)
-	//}
-	//fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
+	txQuote, err := ethClient.VerifyAndAttestOnChain(report)
+	if err != nil {
+		log.Fatalf("failed to submit quote: %v", err)
+	}
+	fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
 }
