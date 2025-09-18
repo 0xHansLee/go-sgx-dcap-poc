@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"fmt"
 	egoenclave "github.com/edgelesssys/ego/enclave"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -66,6 +67,13 @@ func main() {
 	//}
 	//fmt.Println("upsert QE identity tx submitted:", tx.Hash().Hex())
 
+	fmspc, err := extractFMSPC(report)
+	if err != nil {
+		fmt.Println("err in extracting fmspc: ", err)
+	} else {
+		fmt.Println("fmspc: ", fmspc)
+	}
+
 	// 10. Submit Quote for On-Chain Remote Attestation
 	parsedReport, err := egoenclave.VerifyRemoteReport(report)
 	if err != nil {
@@ -87,4 +95,16 @@ func main() {
 		log.Fatalf("failed to submit quote: %v", err)
 	}
 	fmt.Println("quote verification tx submitted:", txQuote.Hash().Hex())
+}
+
+func extractFMSPC(quote []byte) (string, error) {
+	const fmspcOffset = 464
+	const fmspcLength = 6
+
+	if len(quote) < fmspcOffset+fmspcLength {
+		return "", fmt.Errorf("quote too short for FMSPC extraction")
+	}
+
+	fmspc := quote[fmspcOffset : fmspcOffset+fmspcLength]
+	return hex.EncodeToString(fmspc), nil
 }
