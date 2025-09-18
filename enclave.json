@@ -8,13 +8,13 @@
   "securityVersion": 1,
   "mounts": [
     {
-      "source": "/home/ubuntu",
+      "source": "/home/hans2",
       "target": "/home_mnt",
       "type": "hostfs",
       "readOnly": false
     },
     {
-      "source": "/home/ubuntu/go-sgx-dcap-poc/abi",
+      "source": "/home/hans2/go-sgx-dcap-poc/abi",
       "target": "/home_mnt/abi",
       "type": "hostfs",
       "readOnly": false
