@@ -95,7 +95,7 @@ func main() {
 
 	expected := make([]byte, 32)
 	for i := 0; i < 32; i++ {
-		expected[i] = byte(i)
+		expected[i] = byte(17)
 	}
 
 	log.Printf("Expected report data = %s \n", hex.EncodeToString(expected))
