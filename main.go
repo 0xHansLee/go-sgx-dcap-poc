@@ -98,11 +98,13 @@ func main() {
 		expected[i] = byte(i)
 	}
 
+	log.Printf("Expected report data = %s \n", hex.EncodeToString(expected))
+
 	var reportData [64]byte
 	copy(reportData[:32], expected)
 
-	log.Printf("Local reportData[0:32] = %s", hex.EncodeToString(reportData[:32]))
-	log.Printf("Local reportData[32:64] = %s", hex.EncodeToString(reportData[32:]))
+	log.Printf("Local reportData[0:32] = %s \n", hex.EncodeToString(reportData[:32]))
+	log.Printf("Local reportData[32:64] = %s \n", hex.EncodeToString(reportData[32:]))
 
 	quote, err := enclave.GetRemoteReport(reportData[:])
 	if err != nil {
@@ -112,7 +114,7 @@ func main() {
 	log.Printf("Quote length = %d", len(quote))
 	if len(quote) >= 432 {
 		reportDataFromQuote := quote[368:432]
-		log.Printf("Extracted report_data = %s", hex.EncodeToString(reportDataFromQuote))
+		log.Printf("Extracted report_data = %s \n", hex.EncodeToString(reportDataFromQuote))
 	}
 }
 
