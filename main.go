@@ -114,7 +114,8 @@ func main() {
 	log.Printf("Quote length = %d", len(quote))
 	if len(quote) >= 432 {
 		reportDataFromQuote := quote[368:432]
-		log.Printf("Extracted report_data = %s \n", hex.EncodeToString(reportDataFromQuote))
+		log.Printf("Extracted report_data[0:32] = %s \n", hex.EncodeToString(reportDataFromQuote[:32]))
+		log.Printf("Extracted report_data[32:64] = %s, \n", hex.EncodeToString(reportDataFromQuote[32:]))
 	}
 }
 
